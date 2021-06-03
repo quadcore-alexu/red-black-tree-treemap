@@ -47,13 +47,15 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
         do {
             currentNode = nextNode;
             res = key.compareTo(currentNode.getKey());
+
             if (res > 0) nextNode = currentNode.getRightChild();
             else nextNode = currentNode.getLeftChild();
+
         } while (!nextNode.equals(nil));
 
         INode<T, V> node = createNode(currentNode, INode.RED);
-        if (res > 0 ) currentNode.setRightChild(node);
-        else  currentNode.setLeftChild(node);
+        if (res > 0) currentNode.setRightChild(node);
+        else currentNode.setLeftChild(node);
 
         insertionFixup(node);
     }
@@ -61,14 +63,6 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
     @Override
     public boolean delete(T key) {
         return false;
-    }
-
-    private INode<T, V> createNode(INode<T, V> parent, boolean color) {
-        INode<T, V> node = new Node<>(color);
-        node.setParent(parent);
-        node.setLeftChild(nil);
-        node.setRightChild(nil);
-        return node;
     }
 
     private void insertionFixup(INode<T, V> node) {
@@ -81,22 +75,35 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
         if (isBlack(parent)) return; /*also handles the case where my parent is the root*/
 
         INode<T, V> uncle = getUncle(node);
+        INode<T, V> grandParent = parent.getParent();
 
         /*case uncle is red*/
         if (isRed(uncle)) {
             uncle.setColor(INode.BLACK);
             parent.setColor(INode.BLACK);
-            INode<T, V> grandParent = parent.getParent();
             grandParent.setColor(INode.RED);
             insertionFixup(grandParent);
         }
+        /*case uncle is black*/
         else {
-            if(isRightChild(node)) {
-                //todo: left rotate
+            /*make sure new node is left child*/
+            if (isRightChild(node)) {
+                leftRotate(node.getParent());
+                parent = node;
             }
 
-            //todo: right rotate and recolor
+            parent.setColor(INode.BLACK);
+            grandParent.setColor(INode.RED);
+            rightRotate(parent.getParent());
         }
+    }
+
+    private INode<T, V> createNode(INode<T, V> parent, boolean color) {
+        INode<T, V> node = new Node<>(color);
+        node.setParent(parent);
+        node.setLeftChild(nil);
+        node.setRightChild(nil);
+        return node;
     }
 
     private INode<T, V> getUncle(INode<T, V> node) {
@@ -120,4 +127,35 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
     private boolean isBlack(INode<T, V> node) {
         return !node.getColor();
     }
+
+    /*in order to eliminate confusion, rotate methods take their parent as the parameter*/
+    private void leftRotate(INode<T, V> parent) {
+        INode<T, V> child = parent.getRightChild();
+
+        INode<T, V> source = parent.getParent();
+        INode<T, V> commonChild = child.getLeftChild();
+
+        parent.setRightChild(commonChild);
+        child.setLeftChild(parent);
+
+        child.setParent(source);
+        parent.setParent(child);
+
+    }
+
+    /*in order to eliminate confusion, rotate methods take their parent as the parameter*/
+    private void rightRotate(INode<T, V> parent) {
+        INode<T, V> child = parent.getLeftChild();
+
+        INode<T, V> source = parent.getParent();
+        INode<T, V> commonChild = child.getRightChild();
+
+        parent.setLeftChild(commonChild);
+        child.setRightChild(parent);
+
+        child.setParent(source);
+        parent.setParent(child);
+
+    }
+
 }
