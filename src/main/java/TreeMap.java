@@ -1,3 +1,4 @@
+import interfaces.INode;
 import interfaces.ITreeMap;
 
 import java.util.ArrayList;
@@ -7,6 +8,8 @@ import java.util.Set;
 
 public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
+    private final RedBlackTree<T, V> redBlackTree = new RedBlackTree<>();
+    private final INode<T, V> root = redBlackTree.getRoot(), nil = redBlackTree.getNil();
 
     @Override
     public Map.Entry<T, V> ceilingEntry(T key) {

@@ -6,6 +6,9 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
     private INode<T, V> root;
     private final INode<T, V> nil = new Node<>(INode.BLACK);
 
+    public INode<T, V> getNil() {
+        return nil;
+    }
     @Override
     public INode<T, V> getRoot() {
         return root;
@@ -203,7 +206,7 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
         return !node.getColor();
     }
 
-    /*in order to eliminate confusion, rotate methods take their parent as the parameter*/
+    /*in order to avoid confusion, rotate methods take their parent as the parameter*/
     private void leftRotate(INode<T, V> parent) {
         INode<T, V> child = parent.getRightChild();
 
@@ -217,7 +220,7 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
 
     }
 
-    /*in order to eliminate confusion, rotate methods take their parent as the parameter*/
+    /*in order to avoid confusion, rotate methods take their parent as the parameter*/
     private void rightRotate(INode<T, V> parent) {
         INode<T, V> child = parent.getLeftChild();
 
