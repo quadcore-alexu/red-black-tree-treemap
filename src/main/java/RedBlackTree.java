@@ -6,6 +6,8 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
     private INode<T, V> root;
     private final INode<T, V> nil = new Node<>(INode.BLACK);
 
+    private int size = 0;
+
     public INode<T, V> getNil() {
         return nil;
     }
@@ -48,6 +50,7 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
     @Override
     public void insert(T key, V value) {
         if (key == null) return;
+        size++;
         if (root == null) { /*first node*/
             root = createNode(null, INode.BLACK);
             root.setKey(key);
@@ -85,6 +88,7 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
             return false;
         else {
             deleteNode(nodeToDelete);
+            size--;
             return true;
         }
     }
@@ -178,7 +182,7 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
         return node;
     }
 
-    private INode<T, V> getUncle(INode<T, V> node) {
+    protected INode<T, V> getUncle(INode<T, V> node) {
         INode<T, V> parent = node.getParent(), grandParent = parent.getParent();
         INode<T, V> leftChild = grandParent.getLeftChild();
 
@@ -186,23 +190,23 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
         return leftChild;
     }
 
-    private boolean isRightChild(INode<T, V> node) {
+    protected boolean isRightChild(INode<T, V> node) {
         INode<T, V> parent = node.getParent();
         INode<T, V> rightChild = parent.getRightChild();
         return node.equals(rightChild);
     }
 
-    private boolean isLeftChild(INode<T, V> node) {
+    protected boolean isLeftChild(INode<T, V> node) {
         INode<T, V> parent = node.getParent();
         INode<T, V> leftChild = parent.getLeftChild();
         return node.equals(leftChild);
     }
 
-    private boolean isRed(INode<T, V> node) {
+    protected boolean isRed(INode<T, V> node) {
         return node.getColor();
     }
 
-    private boolean isBlack(INode<T, V> node) {
+    protected boolean isBlack(INode<T, V> node) {
         return !node.getColor();
     }
 
@@ -342,4 +346,7 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
         return accumulator;
     }
 
+    public int getSize() {
+        return size;
+    }
 }

@@ -141,12 +141,16 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public Map.Entry<T, V> pollFirstEntry() {
-        return null;
+        Map.Entry<T, V> entry = firstEntry();
+        redBlackTree.delete(entry.getKey());
+        return entry;
     }
 
     @Override
     public Map.Entry<T, V> pollLastEntry() {
-        return null;
+        Map.Entry<T, V> entry = lastEntry();
+        redBlackTree.delete(entry.getKey());
+        return entry;
     }
 
     @Override
