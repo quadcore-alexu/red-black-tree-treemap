@@ -1,3 +1,4 @@
+import com.sun.source.tree.Tree;
 import interfaces.INode;
 import interfaces.ITreeMap;
 
@@ -101,6 +102,9 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public V get(T key) {
+        if (this.containsKey(key)){
+            return redBlackTree.search(key);
+        }
         return null;
     }
 
@@ -170,7 +174,7 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public int size() {
-        return 0;
+        return redBlackTree.getSize();
     }
 
     @Override
