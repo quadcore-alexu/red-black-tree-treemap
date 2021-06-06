@@ -11,6 +11,7 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
     public INode<T, V> getNil() {
         return nil;
     }
+
     @Override
     public INode<T, V> getRoot() {
         return root;
@@ -142,7 +143,7 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
         INode<T, V> parent = node.getParent();
         if (isBlack(parent)) return; /*also handles the case where my parent is the root*/
         INode<T, V> grandParent = parent.getParent();
-        if (grandParent==null)  return;
+        if (grandParent == null) return;
         INode<T, V> uncle = getUncle(node);
 
         /*case uncle is red*/
@@ -162,8 +163,7 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
             parent.setColor(INode.BLACK);
             grandParent.setColor(INode.RED);
             rightRotate(parent.getParent());
-        }
-        else {
+        } else {
             if (isLeftChild(node)) {
                 rightRotate(node.getParent());
                 parent = node;
@@ -281,8 +281,7 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
                     sibling.setColor(INode.RED);
                     // elevate the fix up to the parent
                     transplantedNode = transplantedNode.getParent();
-                }
-                else {
+                } else {
                     // Case 3 sibling with one red child near to the transplanted node
                     if (!sibling.getRightChild().getColor()) {
                         sibling.getLeftChild().setColor(INode.BLACK);
@@ -311,8 +310,7 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
                 if (!sibling.getLeftChild().getColor() && !sibling.getRightChild().getColor()) {
                     sibling.setColor(INode.RED);
                     transplantedNode = transplantedNode.getParent();
-                }
-                else {
+                } else {
                     // Case 3
                     if (!sibling.getLeftChild().getColor()) {
                         sibling.getRightChild().setColor(INode.BLACK);
@@ -341,7 +339,7 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
         if (node == this.nil)
             return accumulator;
         accumulator = inOrderTraverseHelper(node.getLeftChild(), accumulator);
-        accumulator += node.getKey() + " " + (node.getColor()?"Red": "Black") + " ";
+        accumulator += node.getKey() + " " + (node.getColor() ? "Red" : "Black") + " ";
         accumulator = inOrderTraverseHelper(node.getRightChild(), accumulator);
         return accumulator;
     }

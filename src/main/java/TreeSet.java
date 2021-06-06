@@ -1,15 +1,14 @@
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
-public class TreeCollection<V> implements Collection<V> {
+public abstract class TreeSet<E> implements Set<E> {
 
-    TreeMap<?, V> treeMap;
+    TreeMap<?, ?> treeMap;
 
-    public TreeCollection(TreeMap<?, V> treeMap) {
+    public TreeSet(TreeMap<?, ?> treeMap) {
         this.treeMap = treeMap;
     }
 
@@ -25,71 +24,59 @@ public class TreeCollection<V> implements Collection<V> {
 
     @Override
     public boolean contains(Object o) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
 
     @NotNull
     @Override
-    public Iterator<V> iterator() {
-        return new Iterator<V>() {
-            @Override
-            public boolean hasNext() {
-                return false;
-            }
-
-            @Override
-            public V next() {
-                return null;
-            }
-        };
-    }
+    abstract public Iterator<E> iterator();
 
     @NotNull
     @Override
     public Object[] toArray() {
-        return new Object[0];
+        throw new UnsupportedOperationException();
     }
 
     @NotNull
     @Override
     public <T> T[] toArray(@NotNull T[] a) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean add(V v) {
-        return false;
+    public boolean add(E e) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean remove(Object o) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
 
     @Override
     public boolean containsAll(@NotNull Collection<?> c) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean addAll(@NotNull Collection<? extends V> c) {
-        return false;
+    public boolean addAll(@NotNull Collection<? extends E> c) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean removeAll(@NotNull Collection<?> c) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean retainAll(@NotNull Collection<?> c) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void clear() {
-
+        throw new UnsupportedOperationException();
     }
 }

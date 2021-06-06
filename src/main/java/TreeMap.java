@@ -1,11 +1,9 @@
 import com.sun.source.tree.Tree;
 import interfaces.INode;
 import interfaces.ITreeMap;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
@@ -61,7 +59,7 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
     }
 
     @Override
-    public boolean containsValue(V value) {
+    public boolean containsValue(Object value) {
         return false;
     }
 
@@ -159,12 +157,14 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public void put(T key, V value) {
-
+        redBlackTree.insert(key, value);
     }
 
     @Override
     public void putAll(Map<T, V> map) {
-
+        for (Map.Entry<T, V> entry : map.entrySet()) {
+            redBlackTree.insert(entry.getKey(), entry.getValue());
+        }
     }
 
     @Override
@@ -179,6 +179,26 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public Collection<V> values() {
-        return null;
+        return new TreeSet<>(this) {
+            @NotNull
+            @Override
+            public Iterator<V> iterator() {
+                return new Iterator<>() {
+                    private INode<T, V> current = redBlackTree.getRoot();
+
+                    @Override
+                    public boolean hasNext() {
+                        return current != null && !current.equals(redBlackTree.getNil());
+                    }
+
+                    @Override
+                    public V next() {
+                        INode<T, V> old = current;
+                        //todo: update current node according to in-order traversal
+                        return old.getValue();
+                    }
+                };
+            }
+        };
     }
 }
