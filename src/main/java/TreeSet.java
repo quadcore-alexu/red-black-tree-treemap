@@ -45,9 +45,7 @@ public abstract class TreeSet<E> implements Set<E> {
     }
 
     @Override
-    public boolean add(E e) {
-        throw new UnsupportedOperationException();
-    }
+    public abstract boolean add(E e);
 
     @Override
     public boolean remove(Object o) {
