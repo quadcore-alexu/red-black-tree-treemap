@@ -8,8 +8,36 @@ import java.util.Set;
 
 public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
+    private class Pair implements Map.Entry<T, V> {
+
+        private final T key;
+        private V value;
+
+        public Pair(T key, V value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        @Override
+        public T getKey() {
+            return key;
+        }
+
+        @Override
+        public V getValue() {
+            return value;
+        }
+
+        @Override
+        public V setValue(V value) {
+            V old = this.value;
+            put(this.key, value);
+            this.value = value;
+            return old;
+        }
+    }
+
     private final RedBlackTree<T, V> redBlackTree = new RedBlackTree<>();
-    private final INode<T, V> root = redBlackTree.getRoot(), nil = redBlackTree.getNil();
 
     @Override
     public Map.Entry<T, V> ceilingEntry(T key) {
@@ -43,12 +71,22 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public Map.Entry<T, V> firstEntry() {
-        return null;
+        if (redBlackTree.isEmpty()) return null;
+
+        INode<T, V> nil = redBlackTree.getNil();
+        INode<T, V> currentNode, nextNode = redBlackTree.getRoot();
+
+        do {
+            currentNode = nextNode;
+            nextNode = currentNode.getLeftChild();
+        } while (!nextNode.equals(nil));
+
+        return new Pair(currentNode.getKey(), currentNode.getValue());
     }
 
     @Override
     public T firstKey() {
-        return null;
+        return firstEntry().getKey();
     }
 
     @Override
@@ -83,12 +121,22 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public Map.Entry<T, V> lastEntry() {
-        return null;
+        if (redBlackTree.isEmpty()) return null;
+
+        INode<T, V> nil = redBlackTree.getNil();
+        INode<T, V> currentNode, nextNode = redBlackTree.getRoot();
+
+        do {
+            currentNode = nextNode;
+            nextNode = currentNode.getRightChild();
+        } while (!nextNode.equals(nil));
+
+        return new Pair(currentNode.getKey(), currentNode.getValue());
     }
 
     @Override
     public T lastKey() {
-        return null;
+        return lastEntry().getKey();
     }
 
     @Override

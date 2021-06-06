@@ -1,8 +1,6 @@
 import interfaces.INode;
 
-import java.util.TreeMap;
-
-public class Node<T extends Comparable<T>, V> implements INode<T,V> {
+public class Node<T extends Comparable<T>, V> implements INode<T,V>{
 
     private INode<T, V> parent, leftChild, rightChild;
     private T key;

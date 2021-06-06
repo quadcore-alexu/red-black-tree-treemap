@@ -216,7 +216,7 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
         parent.setRightChild(commonChild);
         child.setLeftChild(parent);
 
-        rotateHandle((INode<T, V>) parent, (INode<T, V>) child, (INode<T, V>) source, (INode<T, V>) commonChild);
+        rotateHandle(parent, child, source, commonChild);
 
     }
 
@@ -230,7 +230,7 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
         parent.setLeftChild(commonChild);
         child.setRightChild(parent);
 
-        rotateHandle((INode<T, V>) parent, (INode<T, V>) child, (INode<T, V>) source, (INode<T, V>) commonChild);
+        rotateHandle(parent, child, source, commonChild);
     }
 
     private void rotateHandle(INode<T, V> parent, INode<T, V> child, INode<T, V> source, INode<T, V> commonChild) {
