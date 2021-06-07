@@ -51,13 +51,14 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
     @Override
     public void insert(T key, V value) {
         if (key == null) return;
-        size++;
+
         if (root == null) { /*first node*/
             root = createNode(null, INode.BLACK);
             root.setKey(key);
             root.setValue(value);
             root.setLeftChild(this.nil);
             root.setRightChild(this.nil);
+            size++;
             return;
         }
 
@@ -69,7 +70,11 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
             res = key.compareTo(currentNode.getKey());
 
             if (res > 0) nextNode = currentNode.getRightChild();
-            else nextNode = currentNode.getLeftChild();
+            else if(res < 0) nextNode = currentNode.getLeftChild();
+            else { /*key already present*/
+                currentNode.setValue(value);
+                return;
+            }
 
         } while (!nextNode.equals(this.nil));
 
@@ -79,6 +84,7 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
         if (res > 0) currentNode.setRightChild(node);
         else currentNode.setLeftChild(node);
 
+        size++;
         insertionFixup(node);
     }
 

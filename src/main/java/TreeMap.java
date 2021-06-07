@@ -6,6 +6,9 @@ import java.util.*;
 
 public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
+    private final RedBlackTree<T, V> redBlackTree = new RedBlackTree<>();
+
+
     private class Pair implements Map.Entry<T, V> {
 
         private final T key;
@@ -64,22 +67,6 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
             currentNode = redBlackTree.getMinimum(redBlackTree.getRoot());
         }
 
-
-        private INode<T, V> getSuccessor(INode<T, V> currentNode) {
-
-            if (currentNode.getRightChild() != redBlackTree.getNil())
-                return redBlackTree.getMinimum(currentNode.getRightChild());
-
-            INode<T, V> parent = currentNode.getParent();
-
-            while (parent != null && currentNode == parent.getRightChild()) {
-                currentNode = parent;
-                parent = parent.getParent();
-            }
-
-            return parent;
-        }
-
         @Override
         public boolean hasNext() {
             return countItems < redBlackTree.getSize();
@@ -95,9 +82,23 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
             return new Pair(old.getKey(), old.getValue());
 
         }
+
+        private INode<T, V> getSuccessor(INode<T, V> currentNode) {
+
+            if (currentNode.getRightChild() != redBlackTree.getNil())
+                return redBlackTree.getMinimum(currentNode.getRightChild());
+
+            INode<T, V> parent = currentNode.getParent();
+
+            while (parent != null && currentNode == parent.getRightChild()) {
+                currentNode = parent;
+                parent = parent.getParent();
+            }
+
+            return parent;
+        }
     }
 
-    private final RedBlackTree<T, V> redBlackTree = new RedBlackTree<>();
 
     @Override
     public Map.Entry<T, V> ceilingEntry(T key) {
@@ -303,5 +304,5 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
             }
         };
     }
-
 }
+
