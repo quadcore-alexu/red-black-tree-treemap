@@ -22,14 +22,18 @@ public class TreeMapTest {
         assertEquals(null,treeMap.get(15));
         assertEquals(2,treeMap.size());
     }
+
     @org.junit.jupiter.api.Test
-    void ceilingEntry() {
+    void ceilingKey() {
         TreeMap<Integer, Integer> treeMap=new TreeMap<>();
         treeMap.put(30,1);
         treeMap.put(15,2);
         treeMap.put(24,3);
         treeMap.put(13,4);
         treeMap.put(55,5);
-        assertEquals(24,treeMap.ceilingEntry(20).getKey());
+        assertEquals(24,treeMap.ceilingKey(20));
+        assertEquals(15,treeMap.ceilingKey(15));
+        assertEquals(55,treeMap.ceilingKey(50));
+        assertEquals(null,treeMap.ceilingKey(60));
     }
     }

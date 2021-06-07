@@ -120,8 +120,14 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public T ceilingKey(T key) {
-
-        return key;
+        if (key == null) {
+            return null;
+        }
+        Map.Entry<T, V> entry = ceilingEntry(key);
+        if (entry == null) {
+            return null;
+        }
+        return entry.getKey();
     }
 
     @Override
@@ -299,16 +305,5 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
             }
         };
     }
-
-    private void inorderHelper(INode<T,V> root, Set<Map.Entry<T, V>> result)
-    {
-        if (root.isNull())
-            return;
-        inorderHelper(root.getLeftChild(), result);
-        result.add(new Pair(root.getKey(), root.getValue()) );
-        inorderHelper(root.getRightChild(), result);
-    }
-
-
 
 }
