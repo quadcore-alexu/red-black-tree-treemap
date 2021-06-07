@@ -2,7 +2,6 @@ import interfaces.INode;
 import interfaces.ITreeMap;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.SQLOutput;
 import java.util.*;
 
 public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
@@ -34,6 +33,15 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
             this.value = value;
             return old;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            Pair p = (Pair) o;
+
+            return this.getKey().equals(p.getKey()) && this.getValue().equals(p.getValue());
+        }
+
+
     }
 
     private class EntrySetIterator<E> implements Iterator<E> {
@@ -75,7 +83,7 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
         @Override
         public boolean hasNext() {
-            return countItems < redBlackTree.getSize() ? true : false;
+            return countItems < redBlackTree.getSize();
         }
 
         @Override
@@ -93,7 +101,7 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
                 }
             }
-            throw new NullPointerException("No more items");
+            throw new RuntimeException("No more items");
 
         }
     }
@@ -134,15 +142,7 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
                 return new EntrySetIterator<>();
             }
-            /*add in entry set supports only modifying value of a key that exists in entry set*/
 
-            @Override
-            public boolean add(Map.Entry<T, V> tvEntry) {
-                Pair pair = (Pair) tvEntry;
-                //todo: implement contains method of treeSet , if contains insert in treeMap (key, new value) + update it in treeSet
-
-                return false;
-            }
         };
         return entryTreeSet;
     }
@@ -184,12 +184,35 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public ArrayList<Map.Entry<T, V>> headMap(T toKey) {
-        return null;
+        if (toKey == null) throw new RuntimeException();
+        ArrayList<Map.Entry<T, V>> headMap = new ArrayList<>();
+        headMap = this.headMap(toKey, false);
+        return headMap;
     }
 
     @Override
     public ArrayList<Map.Entry<T, V>> headMap(T toKey, boolean inclusive) {
-        return null;
+        if (toKey == null) throw new RuntimeException();
+        ArrayList<Map.Entry<T, V>> headMap = new ArrayList<>();
+        TreeSet<Map<T, V>> set = new TreeSet<Map<T, V>>(this) {
+            @NotNull
+            @Override
+            public Iterator<Map<T, V>> iterator() {
+                return new EntrySetIterator<>();
+            }
+        };
+        Iterator<Map<T, V>> iterator = set.iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<T, V> entry = (Map.Entry<T, V>) iterator.next();
+            if (entry.getKey().compareTo(toKey) > 0) {
+                break;
+            }
+            headMap.add(entry);
+        }
+        if (!inclusive)
+            headMap.remove(headMap.size() - 1);
+        return headMap;
+
     }
 
     @Override
@@ -232,7 +255,7 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
     }
 
     @Override
-    public void put(T key, V value) {
+    public synchronized void put(T key, V value) {
         redBlackTree.insert(key, value);
     }
 
