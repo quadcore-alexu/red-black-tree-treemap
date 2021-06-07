@@ -128,16 +128,20 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public void clear() {
-
+        this.redBlackTree.clear();
     }
 
     @Override
     public boolean containsKey(T key) {
-        return false;
+        return this.redBlackTree.contains(key);
     }
 
     @Override
     public boolean containsValue(Object value) {
+        for (Object v : this.values())
+        {
+            if(v.equals(value)) return true;
+        }
         return false;
     }
 
@@ -185,7 +189,7 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public V get(T key) {
-        if (key == null) return null;
+        if (key == null) throw new RuntimeException("key is null");
         if (redBlackTree.contains(key)) {
             return redBlackTree.search(key);
         }
@@ -224,7 +228,26 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public Set<T> keySet() {
-        return null;
+        return new TreeSet<T>(this) {
+            @NotNull
+            @Override
+            public Iterator<T> iterator() {
+
+                return new Iterator<>() {
+                    private final Iterator<Map.Entry<T, V>> iterator = new EntrySetIterator();
+
+                    @Override
+                    public boolean hasNext() {
+                        return iterator.hasNext();
+                    }
+
+                    @Override
+                    public T next() {
+                        return iterator.next().getKey();
+                    }
+                };
+            }
+        };
     }
 
     @Override

@@ -7,25 +7,27 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class EntrySetTest {
     private static final ITreeMap<Integer, String> treeMap = new TreeMap<>();
+    int[] arr2 = {9, 10, 11, 12, 13, 15, 23, 24, 30, 55};
 
 
     @BeforeAll
     public static void setUpClass() {
-        treeMap.put(30, null);
-        treeMap.put(15, null);
-        treeMap.put(24, null);
-        treeMap.put(13, null);
-        treeMap.put(55, null);
-        treeMap.put(12, null);
-        treeMap.put(23, null);
-        treeMap.put(9, null);
-        treeMap.put(10, null);
-        treeMap.put(11, null);
+        treeMap.put(30, "a");
+        treeMap.put(15, "b");
+        treeMap.put(24, "c");
+        treeMap.put(13, "asmaa");
+        treeMap.put(55, "d");
+        treeMap.put(12, "e");
+        treeMap.put(23, "f");
+        treeMap.put(9, "g");
+        treeMap.put(10, "h");
+        treeMap.put(11, "i");
+
 
     }
 
@@ -43,7 +45,7 @@ public class EntrySetTest {
     @Test
     void testHeadMap() {
         int[] arr1 = {9, 10, 11, 12, 13, 15};
-        int[] arr2 = {9, 10, 11, 12, 13, 15, 23, 24, 30, 55};
+
         int i = 0;
         ArrayList<Map.Entry<Integer, String>> result = treeMap.headMap(23);
         ArrayList<Map.Entry<Integer, String>> result2 = treeMap.headMap(55, true);
@@ -56,5 +58,22 @@ public class EntrySetTest {
         }
 
     }
+    @Test
+    void testKeySet()
+    {
+        Set<Map.Entry<Integer, String>> s = treeMap.entrySet();
+        Iterator<Map.Entry<Integer, String>> iterator = s.iterator();
+        int i=0;
+        while(iterator.hasNext())
+        {
+            assertEquals(arr2[i++],iterator.next().getKey());
+        }
+    }
+    @Test
+    void testContainsValue(){
+        assertTrue(treeMap.containsValue("asmaa"));
+        assertFalse(treeMap.containsValue("asma"));
+    }
+
 
 }
