@@ -1,3 +1,4 @@
+import com.sun.source.tree.Tree;
 import interfaces.INode;
 import interfaces.ITreeMap;
 import org.jetbrains.annotations.NotNull;
@@ -110,12 +111,31 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public Map.Entry<T, V> ceilingEntry(T key) {
+        if (key == null) {
+            return null;
+        }
+        Iterator<Map.Entry<T, V>> it = entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<T, V> entry = it.next();
+            if (entry.getKey().compareTo(key) > 0 || entry.getKey().compareTo(key) == 0) {
+                return entry;
+            }
+        }
         return null;
     }
 
+
+
     @Override
     public T ceilingKey(T key) {
-        return null;
+        if (key == null) {
+            return null;
+        }
+        Map.Entry<T, V> entry = ceilingEntry(key);
+        if (entry == null) {
+            return null;
+        }
+        return entry.getKey();
     }
 
     @Override
@@ -179,6 +199,9 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public V get(T key) {
+        if (redBlackTree.contains(key)){
+            return redBlackTree.search(key);
+        }
         return null;
     }
 
@@ -268,7 +291,7 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public boolean remove(T key) {
-        return false;
+        return redBlackTree.delete(key);
     }
 
     @Override
@@ -305,4 +328,5 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
             }
         };
     }
+
 }
