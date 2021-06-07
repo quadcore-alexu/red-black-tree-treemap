@@ -1,4 +1,3 @@
-import com.sun.source.tree.Tree;
 import interfaces.INode;
 import interfaces.ITreeMap;
 import org.jetbrains.annotations.NotNull;
@@ -37,48 +36,47 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
         @Override
         public boolean equals(Object o) {
-            Pair p = (Pair) o;
+            // self check
+            if (this == o)
+                return true;
+            // null check
+            if (o == null)
+                return false;
+            // type check and cast
+            if (getClass() != o.getClass())
+                return false;
 
-            return this.getKey().equals(p.getKey()) && this.getValue().equals(p.getValue());
+            @SuppressWarnings("unchecked")
+            Pair pair = (Pair) o;
+            // field comparison
+            return this.getKey().equals(pair.getKey())
+                    && this.getValue().equals(pair.getValue());
         }
 
 
     }
 
-    private class EntrySetIterator<E> implements Iterator<E> {
-        private INode<T, V> root;
+    private class EntrySetIterator implements Iterator<Map.Entry<T, V>> {
         private INode<T, V> currentNode;
         private int countItems = 0;
 
         EntrySetIterator() {
-            root = redBlackTree.getRoot();
-            currentNode = this.getSmallestNode();
-
+            currentNode = redBlackTree.getMinimum(redBlackTree.getRoot());
         }
 
-        private INode<T, V> getSmallestNode() {
-            INode<T, V> smallestNode = null;
-            INode<T, V> temp = root;
-            while (temp != redBlackTree.getNil()) {
-                smallestNode = temp;
-                temp = temp.getLeftChild();
-
-            }
-            return smallestNode;
-        }
 
         private INode<T, V> getSuccessor(INode<T, V> currentNode) {
-            INode<T, V> successor = null;
+
             if (currentNode.getRightChild() != redBlackTree.getNil())
                 return redBlackTree.getMinimum(currentNode.getRightChild());
+
             INode<T, V> parent = currentNode.getParent();
 
             while (parent != null && currentNode == parent.getRightChild()) {
                 currentNode = parent;
                 parent = parent.getParent();
-
-
             }
+
             return parent;
         }
 
@@ -88,21 +86,13 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
         }
 
         @Override
-        public E next() {
-            if (this.hasNext()) {
-                countItems++;
-                if (countItems == 1) {
-                    Pair entry = new Pair(currentNode.getKey(), currentNode.getValue());
-                    return (E) entry;
+        public Map.Entry<T, V> next() {
+            if (!this.hasNext()) throw new RuntimeException("No more items");
 
-                } else {
-                    currentNode = this.getSuccessor(currentNode);
-                    Pair entry = new Pair(currentNode.getKey(), currentNode.getValue());
-                    return (E) entry;
-
-                }
-            }
-            throw new RuntimeException("No more items");
+            countItems++;
+            INode<T, V> old = currentNode;
+            currentNode = this.getSuccessor(currentNode);
+            return new Pair(old.getKey(), old.getValue());
 
         }
     }
@@ -114,16 +104,13 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
         if (key == null) {
             return null;
         }
-        Iterator<Map.Entry<T, V>> it = entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<T, V> entry = it.next();
+        for (Map.Entry<T, V> entry : entrySet()) {
             if (entry.getKey().compareTo(key) > 0 || entry.getKey().compareTo(key) == 0) {
                 return entry;
             }
         }
         return null;
     }
-
 
 
     @Override
@@ -155,16 +142,14 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public Set<Map.Entry<T, V>> entrySet() {
-        TreeSet<Map.Entry<T, V>> entryTreeSet = new TreeSet<Map.Entry<T, V>>(this) {
+        return new TreeSet<>(TreeMap.this) {
             @NotNull
             @Override
             public Iterator<Map.Entry<T, V>> iterator() {
-
-                return new EntrySetIterator<>();
+                return new EntrySetIterator();
             }
 
         };
-        return entryTreeSet;
     }
 
     @Override
@@ -199,7 +184,7 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public V get(T key) {
-        if (redBlackTree.contains(key)){
+        if (redBlackTree.contains(key)) {
             return redBlackTree.search(key);
         }
         return null;
@@ -208,32 +193,29 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
     @Override
     public ArrayList<Map.Entry<T, V>> headMap(T toKey) {
         if (toKey == null) throw new RuntimeException();
-        ArrayList<Map.Entry<T, V>> headMap = new ArrayList<>();
-        headMap = this.headMap(toKey, false);
-        return headMap;
+        return this.headMap(toKey, false);
     }
 
     @Override
     public ArrayList<Map.Entry<T, V>> headMap(T toKey, boolean inclusive) {
         if (toKey == null) throw new RuntimeException();
-        ArrayList<Map.Entry<T, V>> headMap = new ArrayList<>();
-        TreeSet<Map<T, V>> set = new TreeSet<Map<T, V>>(this) {
+
+        TreeSet<Map.Entry<T, V>> set = new TreeSet<>(this) {
             @NotNull
             @Override
-            public Iterator<Map<T, V>> iterator() {
-                return new EntrySetIterator<>();
+            public Iterator<Map.Entry<T, V>> iterator() {
+                return new EntrySetIterator();
             }
         };
-        Iterator<Map<T, V>> iterator = set.iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<T, V> entry = (Map.Entry<T, V>) iterator.next();
-            if (entry.getKey().compareTo(toKey) > 0) {
-                break;
-            }
+
+        ArrayList<Map.Entry<T, V>> headMap = new ArrayList<>();
+
+        for (Map.Entry<T, V> entry : set) {
+            if (entry.getKey().compareTo(toKey) > 0) break;
             headMap.add(entry);
         }
-        if (!inclusive)
-            headMap.remove(headMap.size() - 1);
+
+        if (!inclusive) headMap.remove(headMap.size() - 1);
         return headMap;
 
     }
@@ -306,25 +288,18 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
             @Override
             public Iterator<V> iterator() {
                 return new Iterator<>() {
-                    private INode<T, V> current = redBlackTree.getRoot();
+                    private final Iterator<Map.Entry<T, V>> iterator = new EntrySetIterator();
 
                     @Override
                     public boolean hasNext() {
-                        return current != null && !current.equals(redBlackTree.getNil());
+                        return iterator.hasNext();
                     }
 
                     @Override
                     public V next() {
-                        INode<T, V> old = current;
-                        //todo: update current node according to in-order traversal
-                        return old.getValue();
+                        return iterator.next().getValue();
                     }
                 };
-            }
-
-            @Override
-            public boolean add(V v) {
-                return false;
             }
         };
     }
