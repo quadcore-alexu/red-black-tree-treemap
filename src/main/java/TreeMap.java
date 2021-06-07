@@ -40,12 +40,25 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public Map.Entry<T, V> ceilingEntry(T key) {
+        if (key == null) {
+            return null;
+        }
+        Iterator<Map.Entry<T, V>> it = entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<T, V> entry = it.next();
+            if (entry.getKey().compareTo(key) > 0 || entry.getKey().compareTo(key) == 0) {
+                return entry;
+            }
+        }
         return null;
     }
 
+
+
     @Override
     public T ceilingKey(T key) {
-        return null;
+
+        return key;
     }
 
     @Override
@@ -100,7 +113,7 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public V get(T key) {
-        if (this.containsKey(key)){
+        if (redBlackTree.contains(key)){
             return redBlackTree.search(key);
         }
         return null;
@@ -169,7 +182,7 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public boolean remove(T key) {
-        return false;
+        return redBlackTree.delete(key);
     }
 
     @Override
@@ -201,4 +214,16 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
             }
         };
     }
+
+    private void inorderHelper(INode<T,V> root, Set<Map.Entry<T, V>> result)
+    {
+        if (root.isNull())
+            return;
+        inorderHelper(root.getLeftChild(), result);
+        result.add(new Pair(root.getKey(), root.getValue()) );
+        inorderHelper(root.getRightChild(), result);
+    }
+
+
+
 }
