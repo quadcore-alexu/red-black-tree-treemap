@@ -102,15 +102,28 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public Map.Entry<T, V> ceilingEntry(T key) {
-        if (key == null) {
-            return null;
+        if(key == null) {
+            throw new RuntimeException("Key is null");
         }
-        for (Map.Entry<T, V> entry : entrySet()) {
-            if (entry.getKey().compareTo(key) > 0 || entry.getKey().compareTo(key) == 0) {
-                return entry;
+        INode<T,V> root=redBlackTree.getRoot(),successor=null;
+        while(!root.isNull()&&root.getKey().compareTo(key)!=0) {
+            if(root.getKey().compareTo(key)<0) {
+                root=root.getRightChild();
+            }
+            else {
+                successor=root;
+                root=root.getLeftChild();
             }
         }
-        return null;
+
+        if (!root.isNull() && root.getKey().compareTo(key) == 0) {
+
+            return new Pair(root.getKey(), root.getValue());
+        }
+        if (successor == null)
+            return null;
+        else
+            return  new Pair(successor.getKey(),successor.getValue());
     }
 
 
@@ -179,21 +192,47 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public Map.Entry<T, V> floorEntry(T key) {
-        return null;
+        if (key == null)
+            throw new RuntimeException("key is null");
+
+        INode<T, V> root = redBlackTree.getRoot(), predecessor = null;
+
+        while (!root.isNull() && root.getKey().compareTo(key) != 0) {
+
+            if (root.getKey().compareTo(key) < 0) {
+                predecessor = root;
+                root = root.getRightChild();
+            } else {
+                root = root.getLeftChild();
+            }
+        }
+
+        if (!root.isNull() && root.getKey().compareTo(key) == 0) {
+
+            return new Pair(root.getKey(), root.getValue());
+        }
+        if (predecessor == null)
+            return null;
+        else
+            return new Pair(predecessor.getKey(), predecessor.getValue());
     }
 
     @Override
     public T floorKey(T key) {
-        return null;
+        if (key == null) {
+            throw new RuntimeException("key is null");
+        }
+        Map.Entry<T, V> entry = floorEntry(key);
+        if (entry == null) {
+            return null;
+        }
+        return entry.getKey();
     }
 
     @Override
     public V get(T key) {
         if (key == null) throw new RuntimeException("key is null");
-        if (redBlackTree.contains(key)) {
-            return redBlackTree.search(key);
-        }
-        return null;
+        return redBlackTree.search(key);
     }
 
     @Override

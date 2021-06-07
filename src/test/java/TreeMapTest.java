@@ -43,6 +43,19 @@ public class TreeMapTest {
         assertEquals(55, treeMap.ceilingKey(50));
         assertNull(treeMap.ceilingKey(60));
     }
+    @Test
+    void floorKey() {
+        TreeMap<Integer, Integer> treeMap = new TreeMap<>();
+        treeMap.put(30, 1);
+        treeMap.put(15, 2);
+        treeMap.put(24, 3);
+        treeMap.put(13, 4);
+        treeMap.put(55, 5);
+        assertEquals(15, treeMap.floorKey(20));
+        assertEquals(55, treeMap.floorKey(55));
+        assertEquals(24, treeMap.floorKey(25));
+        assertNull(treeMap.floorKey(12));
+    }
 
     @Test
     void putAndPutAll() {
