@@ -1,4 +1,4 @@
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RedBlackTreeTest {
 
@@ -32,9 +32,9 @@ class RedBlackTreeTest {
         rbTree.delete(7);
         rbTree.delete(8);
         rbTree.delete(16);
-        String expectedInOrderTraversal =   "3 Red 9 Black 10 Black 11 Red 12 Black 13 Black " +
-                                            "18 Black 22 Black 23 Black 24 Red 25 Black 31 Black " +
-                                            "32 Black 55 Red 77 Black ";
+        String expectedInOrderTraversal = "3 Red 9 Black 10 Black 11 Red 12 Black 13 Black " +
+                "18 Black 22 Black 23 Black 24 Red 25 Black 31 Black " +
+                "32 Black 55 Red 77 Black ";
         assertEquals(expectedInOrderTraversal, rbTree.inOrderTraverse());
     }
 }

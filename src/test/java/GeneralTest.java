@@ -1,15 +1,14 @@
-import interfaces.ITreeMap;
+import org.junit.jupiter.api.Test;
 
-import java.sql.SQLOutput;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class Test {
-    @org.junit.jupiter.api.Test
-    void Test() {
+public class GeneralTest {
+    @Test
+    void myTest() {
         TreeMap<Integer, String> treemap = new TreeMap<>();
         TreeMap<Integer, String> t = new TreeMap<>();
         Random r = new Random();

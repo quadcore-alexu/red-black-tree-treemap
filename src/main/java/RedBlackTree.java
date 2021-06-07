@@ -23,7 +23,7 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
     }
 
     @Override
-    public void clear() {
+    public synchronized void clear() {
         root = null;
     }
 
@@ -32,24 +32,13 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
         return searchHelper(key, this.root).getValue();
     }
 
-    private INode<T, V> searchHelper(T key, INode<T, V> node) {
-        if (node == this.nil)
-            return this.nil;
-        if (key.compareTo(node.getKey()) == 0)
-            return node;
-        else if (key.compareTo(node.getKey()) < 0)
-            return searchHelper(key, node.getLeftChild());
-        else
-            return searchHelper(key, node.getRightChild());
-    }
-
     @Override
     public boolean contains(T key) {
         return searchHelper(key, this.root) != this.nil;
     }
 
     @Override
-    public void insert(T key, V value) {
+    public synchronized void insert(T key, V value) {
         if (key == null) return;
 
         if (root == null) { /*first node*/
@@ -70,7 +59,7 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
             res = key.compareTo(currentNode.getKey());
 
             if (res > 0) nextNode = currentNode.getRightChild();
-            else if(res < 0) nextNode = currentNode.getLeftChild();
+            else if (res < 0) nextNode = currentNode.getLeftChild();
             else { /*key already present*/
                 currentNode.setValue(value);
                 return;
@@ -89,7 +78,9 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
     }
 
     @Override
-    public boolean delete(T key) {
+    public synchronized boolean delete(T key) {
+        if (key == null) return false;
+
         INode<T, V> nodeToDelete = searchHelper(key, this.root);
         if (nodeToDelete == this.nil)
             return false;
@@ -98,6 +89,19 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
             size--;
             return true;
         }
+    }
+
+    private INode<T, V> searchHelper(T key, INode<T, V> node) {
+        if (key == null) return null;
+
+        if (node == this.nil)
+            return this.nil;
+        if (key.compareTo(node.getKey()) == 0)
+            return node;
+        else if (key.compareTo(node.getKey()) < 0)
+            return searchHelper(key, node.getLeftChild());
+        else
+            return searchHelper(key, node.getRightChild());
     }
 
     public void deleteNode(INode<T, V> node) {

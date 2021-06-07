@@ -185,6 +185,7 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public V get(T key) {
+        if (key == null) return null;
         if (redBlackTree.contains(key)) {
             return redBlackTree.search(key);
         }
@@ -261,15 +262,16 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
     }
 
     @Override
-    public synchronized void put(T key, V value) {
+    public void put(T key, V value) {
         redBlackTree.insert(key, value);
     }
 
     @Override
     public void putAll(Map<T, V> map) {
-        for (Map.Entry<T, V> entry : map.entrySet()) {
-            redBlackTree.insert(entry.getKey(), entry.getValue());
-        }
+        if (map == null) return;
+        for (Map.Entry<T, V> entry : map.entrySet())
+            put(entry.getKey(), entry.getValue());
+
     }
 
     @Override
