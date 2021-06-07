@@ -231,7 +231,7 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public V get(T key) {
-        if (key == null) throw new RuntimeException("key is null");
+        if (key == null) return null;
         return redBlackTree.search(key);
     }
 
