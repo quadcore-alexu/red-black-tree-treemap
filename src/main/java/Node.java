@@ -1,5 +1,7 @@
 import interfaces.INode;
 
+import java.util.Map;
+
 public class Node<T extends Comparable<T>, V> implements INode<T,V>{
 
     private INode<T, V> parent, leftChild, rightChild;
