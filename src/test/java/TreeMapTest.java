@@ -78,7 +78,7 @@ public class TreeMapTest {
         assertThrows(RuntimeErrorException.class, () -> treeMap.put(null, "null string"));
 
         assertEquals(2, treeMap.size());
-        assertNull(treeMap.get(null));
+        assertThrows(RuntimeErrorException.class, () -> treeMap.get(null));
 
         /*test putAll*/
         Map<Integer, String> map = new HashMap<>();
