@@ -47,7 +47,7 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
 
         if (key == null || value == null) throw new RuntimeErrorException(new Error("Invalid argument null key"));
 
-        if (root == null) { /*first node*/
+        if (root == null || this.root == this.nil) { /*first node*/
             root = createNode(null, INode.BLACK);
             root.setKey(key);
             root.setValue(value);
@@ -86,11 +86,6 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
     @Override
     public synchronized boolean delete(T key) {
         if (key == null) throw new RuntimeErrorException(new Error("Invalid argument null key"));
-        if (size==1 && key.equals(root.getKey())) {
-            root = null;
-            size--;
-            return true;
-        }
 
         INode<T, V> nodeToDelete = searchHelper(key, this.root);
         if (nodeToDelete == this.nil)
