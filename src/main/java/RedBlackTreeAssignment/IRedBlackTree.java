@@ -1,4 +1,4 @@
-package interfaces;
+package RedBlackTreeAssignment;
 
 public interface IRedBlackTree<T extends Comparable<T>, V> {
 

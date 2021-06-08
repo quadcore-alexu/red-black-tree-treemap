@@ -1,5 +1,5 @@
-import interfaces.INode;
-import interfaces.ITreeMap;
+package RedBlackTreeAssignment;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;

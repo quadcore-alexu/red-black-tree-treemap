@@ -1,4 +1,4 @@
-import interfaces.INode;
+package RedBlackTreeAssignment;
 
 public class Node<T extends Comparable<T>, V> implements INode<T, V> {
 

@@ -1,4 +1,4 @@
-package interfaces;
+package RedBlackTreeAssignment;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -139,7 +139,7 @@ public interface ITreeMap<T extends Comparable<T>, V> {
     public void putAll(Map<T, V> map);
 
     /**
-     * Removes the mapping for this key from this TreeMap if present.
+     * Removes the mapping for this key from this RedBlackTreeAssignment.TreeMap if present.
      * @param key
      * @return true if removed and false otherwise.
      */

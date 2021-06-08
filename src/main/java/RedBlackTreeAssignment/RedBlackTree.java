@@ -1,5 +1,6 @@
-import interfaces.INode;
-import interfaces.IRedBlackTree;
+package RedBlackTreeAssignment;
+
+import javax.management.RuntimeErrorException;
 
 public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 
@@ -29,17 +30,22 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
 
     @Override
     public V search(T key) {
+        if (isEmpty())  return null;
+        if (key == null) throw new RuntimeErrorException(new Error("Invalid argument null key"));
         return searchHelper(key, this.root).getValue();
     }
 
     @Override
     public boolean contains(T key) {
+        if (isEmpty())  return false;
+        if (key == null) throw new RuntimeErrorException(new Error("Invalid argument null key"));
         return searchHelper(key, this.root) != this.nil;
     }
 
     @Override
     public synchronized void insert(T key, V value) {
-        if (key == null) return;
+
+        if (key == null || value == null) throw new RuntimeErrorException(new Error("Invalid argument null key"));
 
         if (root == null) { /*first node*/
             root = createNode(null, INode.BLACK);
@@ -79,7 +85,7 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
 
     @Override
     public synchronized boolean delete(T key) {
-        if (key == null) return false;
+        if (key == null) throw new RuntimeErrorException(new Error("Invalid argument null key"));
 
         INode<T, V> nodeToDelete = searchHelper(key, this.root);
         if (nodeToDelete == this.nil)

@@ -1,3 +1,5 @@
+import RedBlackTreeAssignment.RedBlackTree;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RedBlackTreeTest {
