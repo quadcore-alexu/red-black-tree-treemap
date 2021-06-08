@@ -1,12 +1,12 @@
 import RedBlackTreeAssignment.TreeMap;
 import org.junit.jupiter.api.Test;
 
+import javax.management.RuntimeErrorException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TreeMapTest {
     @Test
@@ -44,6 +44,7 @@ public class TreeMapTest {
         assertEquals(55, treeMap.ceilingKey(50));
         assertNull(treeMap.ceilingKey(60));
     }
+
     @Test
     void floorKey() {
         TreeMap<Integer, Integer> treeMap = new TreeMap<>();
@@ -74,7 +75,8 @@ public class TreeMapTest {
         treeMap.put(6, "six");
         assertEquals(2, treeMap.size());
 
-        treeMap.put(null, "null string");
+        assertThrows(RuntimeErrorException.class, () -> treeMap.put(null, "null string"));
+
         assertEquals(2, treeMap.size());
         assertNull(treeMap.get(null));
 
@@ -83,11 +85,10 @@ public class TreeMapTest {
         map.put(6, "New six");
         map.put(7, "seven");
         map.put(8, "eight");
-        map.put(null, "null string");
         treeMap.putAll(map);
         assertEquals(4, treeMap.size());
         assertEquals("New six", treeMap.get(6));
-        treeMap.putAll(null);
+        assertThrows(RuntimeErrorException.class, () -> treeMap.putAll(null));
         assertEquals(4, treeMap.size());
 
     }

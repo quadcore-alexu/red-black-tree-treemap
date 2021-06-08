@@ -2,6 +2,7 @@ package RedBlackTreeAssignment;
 
 import org.jetbrains.annotations.NotNull;
 
+import javax.management.RuntimeErrorException;
 import java.util.*;
 
 public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
@@ -102,17 +103,16 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public Map.Entry<T, V> ceilingEntry(T key) {
-        if(key == null) {
+        if (key == null) {
             throw new RuntimeException("Key is null");
         }
-        INode<T,V> root=redBlackTree.getRoot(),successor=null;
-        while(!root.isNull()&&root.getKey().compareTo(key)!=0) {
-            if(root.getKey().compareTo(key)<0) {
-                root=root.getRightChild();
-            }
-            else {
-                successor=root;
-                root=root.getLeftChild();
+        INode<T, V> root = redBlackTree.getRoot(), successor = null;
+        while (!root.isNull() && root.getKey().compareTo(key) != 0) {
+            if (root.getKey().compareTo(key) < 0) {
+                root = root.getRightChild();
+            } else {
+                successor = root;
+                root = root.getLeftChild();
             }
         }
 
@@ -123,7 +123,7 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
         if (successor == null)
             return null;
         else
-            return  new Pair(successor.getKey(),successor.getValue());
+            return new Pair(successor.getKey(), successor.getValue());
     }
 
 
@@ -151,9 +151,8 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public boolean containsValue(Object value) {
-        for (Object v : this.values())
-        {
-            if(v.equals(value)) return true;
+        for (Object v : this.values()) {
+            if (v.equals(value)) return true;
         }
         return false;
     }
@@ -187,7 +186,8 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public T firstKey() {
-        return firstEntry().getKey();
+        Map.Entry<T, V> entry = firstEntry();
+        return entry != null ? entry.getKey() : null;
     }
 
     @Override
@@ -267,7 +267,7 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public Set<T> keySet() {
-        return new TreeSet<T>(this) {
+        return new TreeSet<>(this) {
             @NotNull
             @Override
             public Iterator<T> iterator() {
@@ -306,12 +306,14 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public T lastKey() {
-        return lastEntry().getKey();
+        Map.Entry<T, V> entry = lastEntry();
+        return entry != null ? entry.getKey() : null;
     }
 
     @Override
     public Map.Entry<T, V> pollFirstEntry() {
         Map.Entry<T, V> entry = firstEntry();
+        if (entry == null) return null;
         redBlackTree.delete(entry.getKey());
         return entry;
     }
@@ -319,6 +321,7 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
     @Override
     public Map.Entry<T, V> pollLastEntry() {
         Map.Entry<T, V> entry = lastEntry();
+        if (entry == null) return null;
         redBlackTree.delete(entry.getKey());
         return entry;
     }
@@ -330,7 +333,7 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public void putAll(Map<T, V> map) {
-        if (map == null) return;
+        if (map == null) throw new RuntimeErrorException(new Error("Invalid argument null key"));
         for (Map.Entry<T, V> entry : map.entrySet())
             put(entry.getKey(), entry.getValue());
 

@@ -37,7 +37,12 @@ public abstract class TreeSet<E> implements Set<E> {
     @NotNull
     @Override
     public Object[] toArray() {
-        throw new UnsupportedOperationException();
+        Iterator<E> iterator = iterator();
+        Object[] arr = new Object[treeMap.size()];
+        for (int i = 0; iterator.hasNext(); i++) {
+            arr[i] = iterator.next();
+        }
+        return arr;
     }
 
     @NotNull
