@@ -26,6 +26,7 @@ public class RedBlackTree<T extends Comparable<T>, V> implements IRedBlackTree<T
     @Override
     public synchronized void clear() {
         root = null;
+        this.size=0;
     }
 
     @Override

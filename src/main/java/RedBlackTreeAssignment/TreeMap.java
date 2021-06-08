@@ -40,24 +40,17 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
         @Override
         public boolean equals(Object o) {
-            // self check
-            if (this == o)
-                return true;
-            // null check
-            if (o == null)
-                return false;
-            // type check and cast
-            if (getClass() != o.getClass())
-                return false;
+            if (o == null) return false;
+            if (o instanceof Map.Entry<?, ?>) {
+                Map.Entry<?, ?> entry = (Map.Entry<?, ?>) o;
+                // field comparison
+                if (this.getKey().equals(entry.getKey()) && this.getValue().equals(entry.getValue())) return true;
 
-            @SuppressWarnings("unchecked")
-            Pair pair = (Pair) o;
-            // field comparison
-            return this.getKey().equals(pair.getKey())
-                    && this.getValue().equals(pair.getValue());
+            }
+            return false;
+
+
         }
-
-
     }
 
     private class EntrySetIterator implements Iterator<Map.Entry<T, V>> {
@@ -75,7 +68,7 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
         @Override
         public Map.Entry<T, V> next() {
-            if (!this.hasNext()) throw new RuntimeException("No more items");
+            if (!this.hasNext()) throw new RuntimeErrorException(new Error());
 
             countItems++;
             INode<T, V> old = currentNode;
@@ -104,7 +97,7 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
     @Override
     public Map.Entry<T, V> ceilingEntry(T key) {
         if (key == null) {
-            throw new RuntimeException("Key is null");
+            throw new RuntimeErrorException(new Error());
         }
         INode<T, V> root = redBlackTree.getRoot(), successor = null;
         while (!root.isNull() && root.getKey().compareTo(key) != 0) {
@@ -129,9 +122,7 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public T ceilingKey(T key) {
-        if (key == null) {
-            return null;
-        }
+        if (key == null) throw new RuntimeErrorException(new Error());
         Map.Entry<T, V> entry = ceilingEntry(key);
         if (entry == null) {
             return null;
@@ -141,16 +132,19 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public void clear() {
+
         this.redBlackTree.clear();
     }
 
     @Override
     public boolean containsKey(T key) {
+        if (key == null) throw new RuntimeErrorException(new Error());
         return this.redBlackTree.contains(key);
     }
 
     @Override
     public boolean containsValue(Object value) {
+        if (value == null) throw new RuntimeErrorException(new Error());
         for (Object v : this.values()) {
             if (v.equals(value)) return true;
         }
@@ -193,7 +187,7 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
     @Override
     public Map.Entry<T, V> floorEntry(T key) {
         if (key == null)
-            throw new RuntimeException("key is null");
+            throw new RuntimeErrorException(new Error());
 
         INode<T, V> root = redBlackTree.getRoot(), predecessor = null;
 
@@ -220,7 +214,7 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
     @Override
     public T floorKey(T key) {
         if (key == null) {
-            throw new RuntimeException("key is null");
+            throw new RuntimeErrorException(new Error());
         }
         Map.Entry<T, V> entry = floorEntry(key);
         if (entry == null) {
@@ -231,19 +225,19 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 
     @Override
     public V get(T key) {
-        if (key == null) return null;
+        if (key == null) throw new RuntimeErrorException(new Error());
         return redBlackTree.search(key);
     }
 
     @Override
     public ArrayList<Map.Entry<T, V>> headMap(T toKey) {
-        if (toKey == null) throw new RuntimeException();
+        if (toKey == null) throw new RuntimeErrorException(new Error());
         return this.headMap(toKey, false);
     }
 
     @Override
     public ArrayList<Map.Entry<T, V>> headMap(T toKey, boolean inclusive) {
-        if (toKey == null) throw new RuntimeException();
+        if (toKey == null) throw new RuntimeErrorException(new Error());
 
         TreeSet<Map.Entry<T, V>> set = new TreeSet<>(this) {
             @NotNull
